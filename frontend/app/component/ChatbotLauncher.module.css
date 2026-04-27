@@ -1,0 +1,74 @@
+/* ──────────────────────────────────────────
+   ChatbotLauncher — CSS Module
+   ────────────────────────────────────────── */
+
+.wrapper {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+/* ── Floating chat window ─────────────────── */
+.chatWindow {
+  width: 360px;
+  height: 520px;
+  border-radius: 16px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+  animation: slideUp 0.25s ease-out;
+  transform-origin: bottom right;
+}
+
+@media (max-width: 420px) {
+  .chatWindow {
+    width: calc(100vw - 2rem);
+    height: 70vh;
+    right: 1rem;
+    position: fixed;
+    bottom: 5.5rem;
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);    }
+}
+
+/* ── FAB button ──────────────────────────── */
+.fab {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.fab:hover {
+  background: #1d4ed8;
+  transform: scale(1.08);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.7);
+}
+
+.fabOpen {
+  background: #475569;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.fabOpen:hover {
+  background: #334155;
+}

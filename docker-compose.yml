@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+    container_name: disasteraware_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - CORS_ALLOWED_ORIGINS=http://localhost:3001

@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: disasteraware-backend
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && python seed.py"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    healthCheckPath: /status/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "http://localhost:3001,https://disasteraware-frontend.onrender.com"
+      - key: SECURE
+        value: "true"
+
+  - type: web
+    name: disasteraware-frontend
+    env: node
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: "https://disasteraware-backend.onrender.com"

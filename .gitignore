@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Databases and logs
+db.sqlite3
+*.log
+staticfiles/
+media/
+backend/logs/
+
+# Environment files
+.env
+backend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.env*.local
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+frontend/build/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test caches
+**/.pytest_cache/

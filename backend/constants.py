@@ -1,0 +1,17 @@
+CITY_FEATURES = {
+    "Mumbai":        {"state": "Maharashtra", "lat": 19.076,  "lon": 72.877,  "pop_density": 20667, "elevation_m": 14,  "coast_km": 0,    "annual_rainfall_mm": 2167, "seismic_zone": 3},
+    "Delhi":         {"state": "Delhi",       "lat": 28.704,  "lon": 77.102,  "pop_density": 11320, "elevation_m": 216, "coast_km": 1400, "annual_rainfall_mm": 797,  "seismic_zone": 4},
+    "Bangalore":     {"state": "Karnataka",   "lat": 12.971,  "lon": 77.594,  "pop_density": 4381,  "elevation_m": 920, "coast_km": 340,  "annual_rainfall_mm": 970,  "seismic_zone": 2},
+    "Chennai":       {"state": "Tamil Nadu",  "lat": 13.082,  "lon": 80.270,  "pop_density": 7088,  "elevation_m": 6,   "coast_km": 0,    "annual_rainfall_mm": 1400, "seismic_zone": 3},
+    "Kolkata":       {"state": "West Bengal", "lat": 22.572,  "lon": 88.363,  "pop_density": 24252, "elevation_m": 9,   "coast_km": 130,  "annual_rainfall_mm": 1582, "seismic_zone": 3},
+    "Hyderabad":     {"state": "Telangana",   "lat": 17.385,  "lon": 78.486,  "pop_density": 18480, "elevation_m": 542, "coast_km": 560,  "annual_rainfall_mm": 812,  "seismic_zone": 2},
+    "Pune":          {"state": "Maharashtra", "lat": 18.520,  "lon": 73.856,  "pop_density": 5600,  "elevation_m": 560, "coast_km": 150,  "annual_rainfall_mm": 722,  "seismic_zone": 3},
+    "Ahmedabad":     {"state": "Gujarat",     "lat": 23.022,  "lon": 72.571,  "pop_density": 9000,  "elevation_m": 53,  "coast_km": 260,  "annual_rainfall_mm": 782,  "seismic_zone": 3},
+    "Jaipur":        {"state": "Rajasthan",   "lat": 26.912,  "lon": 75.787,  "pop_density": 6900,  "elevation_m": 431, "coast_km": 800,  "annual_rainfall_mm": 650,  "seismic_zone": 2},
+    "Lucknow":       {"state": "UP",          "lat": 26.846,  "lon": 80.946,  "pop_density": 2400,  "elevation_m": 123, "coast_km": 1100, "annual_rainfall_mm": 890,  "seismic_zone": 3},
+    "Surat":         {"state": "Gujarat",     "lat": 21.170,  "lon": 72.831,  "pop_density": 8200,  "elevation_m": 13,  "coast_km": 20,   "annual_rainfall_mm": 1143, "seismic_zone": 3},
+    "Bhopal":        {"state": "MP",          "lat": 23.259,  "lon": 77.412,  "pop_density": 3400,  "elevation_m": 527, "coast_km": 700,  "annual_rainfall_mm": 1146, "seismic_zone": 2},
+    "Kochi":         {"state": "Kerala",      "lat": 9.931,   "lon": 76.267,  "pop_density": 2100,  "elevation_m": 8,   "coast_km": 0,    "annual_rainfall_mm": 3067, "seismic_zone": 3},
+    "Bhubaneswar":   {"state": "Odisha",      "lat": 20.296,  "lon": 85.824,  "pop_density": 3500,  "elevation_m": 45,  "coast_km": 120,  "annual_rainfall_mm": 1500, "seismic_zone": 3},
+    "Visakhapatnam": {"state": "AP",          "lat": 17.686,  "lon": 83.218,  "pop_density": 3400,  "elevation_m": 45,  "coast_km": 0,    "annual_rainfall_mm": 1020, "seismic_zone": 3},
+}

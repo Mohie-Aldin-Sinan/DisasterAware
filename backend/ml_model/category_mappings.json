@@ -1,0 +1,21 @@
+{
+  "city": {
+    "0": "Ahmedabad",
+    "1": "Bangalore",
+    "2": "Chennai",
+    "3": "Delhi",
+    "4": "Hyderabad",
+    "5": "Jaipur",
+    "6": "Kolkata",
+    "7": "Lucknow",
+    "8": "Mumbai",
+    "9": "Pune"
+  },
+  "disaster_type": {
+    "0": "Cyclone",
+    "1": "Drought",
+    "2": "Earthquake",
+    "3": "Flood",
+    "4": "Landslide"
+  }
+}
