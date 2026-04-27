@@ -36,6 +36,7 @@ node_modules/
 .next/
 out/
 frontend/build/
+.vercel/
 
 # OS / editor
 .DS_Store

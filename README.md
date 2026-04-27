@@ -133,19 +133,33 @@ Example files are included:
 
 ## Deployment
 
-The repository includes a `render.yaml` blueprint for deploying both services on Render.
+The clean free deployment path for this repository is `Vercel` with two separate projects connected to the same GitHub repository:
 
-Render services:
+- `frontend` as a Next.js project
+- `backend` as a Python/FastAPI project
 
-- `disasteraware-backend`
-- `disasteraware-frontend`
+### Vercel setup
 
-Deployment notes:
+1. Import the repository into Vercel twice.
+2. For the frontend project, set the Root Directory to `frontend`.
+3. For the backend project, set the Root Directory to `backend`.
+4. Add the following environment variables:
 
-- Deploy the backend and frontend together from the same repo using Render Blueprint.
-- Set the frontend `NEXT_PUBLIC_API_URL` to the live backend URL.
-- Set backend `CORS_ALLOWED_ORIGINS` to the live frontend URL.
-- On free hosting, backend cold starts and non-persistent local storage should be expected.
+Frontend project:
+
+- `NEXT_PUBLIC_API_URL=https://your-backend-project.vercel.app`
+
+Backend project:
+
+- `CORS_ALLOWED_ORIGINS=https://your-frontend-project.vercel.app`
+
+### Vercel notes
+
+- The backend uses FastAPI and is compatible with Vercel's Python runtime.
+- `backend/app.py` is included as the Vercel FastAPI entrypoint while `backend/main.py` remains the local Uvicorn entrypoint.
+- The backend includes `backend/vercel.json` to keep the Python bundle leaner by excluding tests and local-only files.
+- SQLite history data is ephemeral on serverless hosting. Prediction history and seeded records can reset between cold starts or redeploys.
+- The trained ML artifacts are committed so the API can serve predictions without a retraining step during deployment.
 
 ## API Surface
 
