@@ -17,10 +17,12 @@ env/
 
 # Databases and logs
 db.sqlite3
+backend/database.sqlite3
 *.log
 staticfiles/
 media/
 backend/logs/
+.runlogs/
 
 # Environment files
 .env
