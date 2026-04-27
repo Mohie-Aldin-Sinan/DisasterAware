@@ -157,7 +157,6 @@ Backend project:
 
 - The backend uses FastAPI and is compatible with Vercel's Python runtime.
 - `backend/app.py` is included as the Vercel FastAPI entrypoint while `backend/main.py` remains the local Uvicorn entrypoint.
-- The backend includes `backend/vercel.json` to keep the Python bundle leaner by excluding tests and local-only files.
 - SQLite history data is ephemeral on serverless hosting. Prediction history and seeded records can reset between cold starts or redeploys.
 - The trained ML artifacts are committed so the API can serve predictions without a retraining step during deployment.
 
