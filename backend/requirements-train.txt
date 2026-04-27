@@ -1,0 +1,4 @@
+-r requirements.txt
+imbalanced-learn>=0.12,<1.0
+pytest>=8.0.0
+shap>=0.45,<1.0

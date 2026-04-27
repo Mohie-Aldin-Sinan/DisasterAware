@@ -4,7 +4,6 @@ from datetime import datetime
 
 import numpy as np
 import pandas as pd
-import shap
 from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.compose import ColumnTransformer
@@ -21,6 +20,11 @@ from sklearn.metrics import (
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold, cross_validate, train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler
 from xgboost import XGBClassifier
+
+try:
+    import shap
+except Exception:
+    shap = None
 
 
 def engineer_features(df):
@@ -116,26 +120,29 @@ def get_cross_validation_summary(model, X_train, y_train, cv):
 def get_feature_importance(best_model, X_train, numerical_features, categorical_features, ordinal_features, pass_through_features):
     fitted_preprocessor = best_model.named_steps["preprocessor"]
     fitted_rf = best_model.named_steps["classifier"].named_estimators_["rf"]
-    X_train_transformed = fitted_preprocessor.transform(X_train)
 
     num_names = numerical_features
     cat_names = fitted_preprocessor.named_transformers_["cat"].get_feature_names_out(categorical_features).tolist()
     ord_names = ordinal_features
     all_feature_names = num_names + cat_names + ord_names + pass_through_features
 
-    sample_size = min(100, X_train_transformed.shape[0])
-    background_idx = np.random.choice(X_train_transformed.shape[0], sample_size, replace=False)
-    background_data = X_train_transformed[background_idx]
+    if shap is not None:
+        X_train_transformed = fitted_preprocessor.transform(X_train)
+        sample_size = min(100, X_train_transformed.shape[0])
+        background_idx = np.random.choice(X_train_transformed.shape[0], sample_size, replace=False)
+        background_data = X_train_transformed[background_idx]
 
-    explainer = shap.TreeExplainer(fitted_rf)
-    shap_values = explainer.shap_values(background_data)
+        explainer = shap.TreeExplainer(fitted_rf)
+        shap_values = explainer.shap_values(background_data)
 
-    if isinstance(shap_values, list):
-        mean_abs_shap = np.mean([np.abs(values).mean(axis=0) for values in shap_values], axis=0)
-    elif len(shap_values.shape) > 2:
-        mean_abs_shap = np.abs(shap_values).mean(axis=0).mean(axis=-1)
+        if isinstance(shap_values, list):
+            mean_abs_shap = np.mean([np.abs(values).mean(axis=0) for values in shap_values], axis=0)
+        elif len(shap_values.shape) > 2:
+            mean_abs_shap = np.abs(shap_values).mean(axis=0).mean(axis=-1)
+        else:
+            mean_abs_shap = np.abs(shap_values).mean(axis=0)
     else:
-        mean_abs_shap = np.abs(shap_values).mean(axis=0)
+        mean_abs_shap = fitted_rf.feature_importances_
 
     feature_importance_dict = {
         name: float(importance) for name, importance in zip(all_feature_names, mean_abs_shap)

@@ -63,7 +63,7 @@ graph TD
 - NumPy
 - Scikit-learn
 - XGBoost
-- SHAP
+- SHAP for offline model analysis
 
 ## Repository Structure
 
@@ -91,6 +91,7 @@ docker-compose.yml
 ```bash
 cd backend
 venv\Scripts\activate
+pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
@@ -185,6 +186,7 @@ The current pipeline:
 To regenerate the training artifacts:
 
 ```bash
+pip install -r backend/requirements-train.txt
 python backend/ml_model/prepare_data.py
 python backend/ml_model/train_model.py
 ```
