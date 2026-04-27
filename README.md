@@ -1,63 +1,36 @@
 # DisasterAware
 
-DisasterAware is a full-stack disaster intelligence platform that combines live hazard feeds, explainable machine learning, and preparedness workflows into a single product experience.
+DisasterAware is a full-stack disaster intelligence platform built to combine live hazard monitoring, machine learning-based risk assessment, and preparedness guidance in a single web application.
 
-It is designed to answer three practical questions:
+The project focuses on three practical questions:
 
-1. What is happening right now?
+1. What hazards are active right now?
 2. Which cities are at higher risk?
-3. What actions should people take next?
+3. What actions should follow from that risk signal?
 
-## What Makes This Project Strong
+## Overview
 
-- `Next.js 15` frontend built with the App Router and interactive geospatial views
-- `FastAPI` backend serving prediction endpoints, health checks, historical data, and third-party feed proxying
-- `SQLite + SQLModel` persistence for prediction history and operational records
-- `Scikit-learn` model pipeline with exposed metrics and feature-importance output
-- `Real-time USGS integration` surfaced through an internal backend proxy instead of direct browser calls
+DisasterAware combines a `Next.js` frontend with a `FastAPI` backend and an ML pipeline trained on historical and engineered risk features. The application provides a clean public interface for:
 
-## Core Product Surfaces
+- city-level disaster risk assessment
+- live seismic monitoring
+- historical incident and prediction records
+- model metrics and explainability
+- preparedness guidance for major hazard categories
 
-### 1. Landing Experience
-The homepage is positioned like a production product. It surfaces:
+## Key Features
 
-- backend health and model readiness
-- live city risk coverage
-- feature-importance summaries
-- direct paths into prediction, monitoring, and model explainability
+- `Risk Assessment Workflow`
+  Submit a city, month, disaster type, and severity to receive a risk level, confidence score, estimated impact, and recommended actions.
 
-### 2. Risk Prediction Workflow
-The `/prediction` flow accepts:
+- `Live Alerts Console`
+  View real-time earthquake activity through a backend USGS proxy and review stored incident history in one operational view.
 
-- city
-- month
-- disaster type
-- severity
+- `Model Diagnostics`
+  Inspect evaluation metrics, feature importance, runtime health, and data-source metadata from the trained model.
 
-The backend returns:
-
-- risk band
-- confidence score
-- estimated affected population
-- recommended actions
-- top contributing risk factors
-
-### 3. Live Alerts Console
-The `/alerts` page combines:
-
-- a real-time seismic map powered by the USGS earthquake feed
-- a historical incident and prediction registry backed by SQLite
-- operational summary statistics that make the data story easier to understand
-
-### 4. Model Intelligence View
-The `/model` page exposes:
-
-- evaluation metrics
-- runtime health
-- training sample counts
-- surfaced feature importance
-
-This is especially useful because it demonstrates that the ML layer is not a black box hidden behind a button.
+- `Preparedness Guidance`
+  Present hazard-specific preparedness recommendations in a user-facing format instead of returning only a raw prediction.
 
 ## Architecture
 
@@ -67,29 +40,54 @@ graph TD
     FE --> BE["FastAPI Backend"]
     BE --> DB["SQLite / SQLModel"]
     BE --> ML["Scikit-learn Model"]
-    BE --> USGS["USGS Earthquake API"]
+    BE --> USGS["USGS Earthquake Feed"]
 ```
 
 ## Tech Stack
 
 ### Frontend
-- Next.js
-- React
+
+- Next.js 15
+- React 19
 - Tailwind CSS
 - React Leaflet
+- React Icons
 
 ### Backend
+
 - FastAPI
+- Uvicorn
 - SQLModel
 - SQLite
 - Pandas
 - NumPy
 - Scikit-learn
-- Joblib
+- XGBoost
+- SHAP
 
-## Local Setup
+## Repository Structure
+
+```text
+backend/
+  ml_model/
+  routers/
+  tests/
+  main.py
+  seed.py
+
+frontend/
+  app/
+  public/
+  package.json
+
+render.yaml
+docker-compose.yml
+```
+
+## Local Development
 
 ### Backend
+
 ```bash
 cd backend
 venv\Scripts\activate
@@ -97,57 +95,81 @@ uvicorn main:app --reload --port 8000
 ```
 
 ### Frontend
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Frontend runs on `http://localhost:3001` and backend runs on `http://localhost:8000`.
+Local URLs:
 
-## Deployment
+- Frontend: `http://localhost:3001`
+- Backend: `http://localhost:8000`
 
-The repo includes a `render.yaml` blueprint for deploying both services on Render.
+## Environment Variables
 
-### Render services
-- `disasteraware-backend`
-- `disasteraware-frontend`
+### Frontend
 
-### Required frontend environment variables
+Required:
+
 - `NEXT_PUBLIC_API_URL`
 
-### Optional frontend environment variables
+Optional:
+
 - `IPINFO_TOKEN`
 - `NEXT_PUBLIC_OPENWEATHER_API_KEY`
 
-### Required backend environment variables
+### Backend
+
+Required:
+
 - `CORS_ALLOWED_ORIGINS`
 
-### Notes
-- The frontend expects the backend to be deployed first so `NEXT_PUBLIC_API_URL` points to a live API.
-- The seed script is idempotent now, so repeated deploys do not duplicate the starter disaster history records.
+Example files are included:
 
-## Portfolio Talking Points
+- `frontend/.env.example`
+- `backend/.env.example`
 
-- Built a full-stack disaster intelligence platform using Next.js and FastAPI to combine live hazard monitoring with ML-driven risk prediction.
-- Productized an ML model by exposing confidence, feature importance, health status, and recommended actions through a user-facing application.
-- Integrated third-party live earthquake data via a backend proxy and rendered it on an interactive geospatial dashboard.
-- Designed a multi-page experience spanning prediction workflows, alerts, preparedness guidance, and model explainability.
+## Deployment
 
-## Good Discussion Angles
+The repository includes a `render.yaml` blueprint for deploying both services on Render.
 
-### Why FastAPI?
-Because the ML and data-processing layer already lives naturally in Python, FastAPI keeps the inference pipeline close to the application layer while still providing strong developer ergonomics and performance.
+Render services:
 
-### Why expose model diagnostics in the UI?
-Because decision-support systems are more credible when they communicate confidence, major inputs, and system state instead of returning a single opaque score.
+- `disasteraware-backend`
+- `disasteraware-frontend`
 
-### Why proxy USGS data through the backend?
-It keeps the frontend simpler, avoids browser-side integration issues, and creates a clean place to normalize, cache, and evolve third-party data handling.
+Deployment notes:
 
-## Retraining The ML Artifacts
+- Deploy the backend and frontend together from the same repo using Render Blueprint.
+- Set the frontend `NEXT_PUBLIC_API_URL` to the live backend URL.
+- Set backend `CORS_ALLOWED_ORIGINS` to the live frontend URL.
+- On free hosting, backend cold starts and non-persistent local storage should be expected.
 
-If you update the dataset or want the hardened evaluation pipeline to regenerate trustworthy metrics, run:
+## API Surface
+
+Representative backend routes:
+
+- `GET /status/`
+- `POST /api/predict/`
+- `GET /api/model-info/`
+- `GET /api/city-risks/`
+- `GET /api/history/`
+- `GET /api/usgs-proxy/`
+
+## Model Pipeline
+
+The ML layer is designed as a risk estimation system rather than an authoritative forecasting engine.
+
+The current pipeline:
+
+- trains on city, seasonal, geospatial, and demographic features
+- exposes evaluation metrics and feature importance
+- compares the main model against simple baselines
+- stores model artifacts for API inference
+
+To regenerate the training artifacts:
 
 ```bash
 python backend/ml_model/prepare_data.py
@@ -155,13 +177,18 @@ python backend/ml_model/train_model.py
 ```
 
 This refreshes:
+
 - `backend/ml_model/disaster_model.pkl`
 - `backend/ml_model/label_encoder.pkl`
 - `backend/ml_model/feature_importance.json`
 - `backend/ml_model/model_metrics.json`
 
-The current training pipeline also:
-- removes `death_log` from training features to reduce label leakage
-- collapses repeated USGS earthquake rows into a cleaner city-month signal
-- compares the ensemble against logistic-regression and dummy baselines
-- saves cross-validation summaries alongside holdout metrics
+## Notes
+
+- Historical starter data is seeded through `backend/seed.py`.
+- The seed process is idempotent and avoids duplicate inserts on repeated deploys.
+- The backend uses a USGS proxy so the frontend does not depend on direct browser-side third-party requests.
+
+## License
+
+No license file is currently included in this repository.
