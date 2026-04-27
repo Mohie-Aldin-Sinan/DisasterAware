@@ -1,36 +1,34 @@
 # DisasterAware
 
-DisasterAware is a full-stack disaster intelligence platform built to combine live hazard monitoring, machine learning-based risk assessment, and preparedness guidance in a single web application.
+DisasterAware is a full-stack disaster intelligence platform for monitoring active hazards, estimating city-level disaster risk, and translating model output into practical preparedness guidance.
 
-The project focuses on three practical questions:
+## Live Demo
 
-1. What hazards are active right now?
-2. Which cities are at higher risk?
-3. What actions should follow from that risk signal?
+- Production application: [https://disaster-aware.vercel.app](https://disaster-aware.vercel.app)
 
 ## Overview
 
-DisasterAware combines a `Next.js` frontend with a `FastAPI` backend and an ML pipeline trained on historical and engineered risk features. The application provides a clean public interface for:
+DisasterAware combines a `Next.js` frontend, a `FastAPI` backend, and a machine learning pipeline to support three core workflows:
 
-- city-level disaster risk assessment
-- live seismic monitoring
-- historical incident and prediction records
-- model metrics and explainability
-- preparedness guidance for major hazard categories
+1. monitor live hazard activity
+2. estimate relative disaster risk for supported cities
+3. surface recommended actions and readiness context
 
-## Key Features
+The platform is designed as a decision-support product rather than a static dashboard. It brings together live seismic data, historical event records, model metrics, and preparedness content in a single public interface.
 
-- `Risk Assessment Workflow`
-  Submit a city, month, disaster type, and severity to receive a risk level, confidence score, estimated impact, and recommended actions.
+## Core Capabilities
 
-- `Live Alerts Console`
-  View real-time earthquake activity through a backend USGS proxy and review stored incident history in one operational view.
+- `Risk assessment workflow`
+  Users can submit a city, month, disaster type, and severity to receive a risk level, confidence score, impact estimate, and recommended actions.
 
-- `Model Diagnostics`
-  Inspect evaluation metrics, feature importance, runtime health, and data-source metadata from the trained model.
+- `Live alerts console`
+  The application proxies live USGS earthquake activity through the backend and presents it alongside stored incident history.
 
-- `Preparedness Guidance`
-  Present hazard-specific preparedness recommendations in a user-facing format instead of returning only a raw prediction.
+- `Model diagnostics`
+  The product exposes evaluation metrics, feature importance, runtime health, and model metadata directly in the UI.
+
+- `Preparedness guidance`
+  Prediction results are paired with hazard-specific follow-up actions so the output is operationally useful.
 
 ## Architecture
 
@@ -56,13 +54,20 @@ graph TD
 ### Backend
 
 - FastAPI
-- Uvicorn
 - SQLModel
 - SQLite
 - Pandas
 - NumPy
 - Scikit-learn
-- SHAP for offline model analysis
+- SHAP for offline analysis
+
+## Product Surfaces
+
+- `Home` for system status, metrics, and platform overview
+- `Prediction` for structured disaster risk assessment
+- `Alerts` for live seismic monitoring and historical event review
+- `Model` for metrics, explainability, and backend health
+- `Preparedness` for hazard-specific readiness guidance
 
 ## Repository Structure
 
@@ -71,6 +76,7 @@ backend/
   ml_model/
   routers/
   tests/
+  app.py
   main.py
   seed.py
 
@@ -79,8 +85,8 @@ frontend/
   public/
   package.json
 
-render.yaml
 docker-compose.yml
+render.yaml
 ```
 
 ## Local Development
@@ -126,39 +132,38 @@ Required:
 
 - `CORS_ALLOWED_ORIGINS`
 
-Example files are included:
+Example files:
 
 - `frontend/.env.example`
 - `backend/.env.example`
 
 ## Deployment
 
-The clean free deployment path for this repository is `Vercel` with two separate projects connected to the same GitHub repository:
+The project is deployed on `Vercel` as two projects connected to the same GitHub repository:
 
-- `frontend` as a Next.js project
-- `backend` as a Python/FastAPI project
+- `frontend` deployed as the public Next.js application
+- `backend` deployed as the FastAPI API service
 
-### Vercel setup
-
-1. Import the repository into Vercel twice.
-2. For the frontend project, set the Root Directory to `frontend`.
-3. For the backend project, set the Root Directory to `backend`.
-4. Add the following environment variables:
+### Vercel configuration
 
 Frontend project:
 
-- `NEXT_PUBLIC_API_URL=https://your-backend-project.vercel.app`
+- Root Directory: `frontend`
+- Required env:
+  - `NEXT_PUBLIC_API_URL=https://your-backend-project.vercel.app`
 
 Backend project:
 
-- `CORS_ALLOWED_ORIGINS=https://your-frontend-project.vercel.app`
+- Root Directory: `backend`
+- Required env:
+  - `CORS_ALLOWED_ORIGINS=https://your-frontend-project.vercel.app`
 
-### Vercel notes
+### Deployment notes
 
-- The backend uses FastAPI and is compatible with Vercel's Python runtime.
-- `backend/app.py` is included as the Vercel FastAPI entrypoint while `backend/main.py` remains the local Uvicorn entrypoint.
-- SQLite history data is ephemeral on serverless hosting. Prediction history and seeded records can reset between cold starts or redeploys.
-- The trained ML artifacts are committed so the API can serve predictions without a retraining step during deployment.
+- `backend/app.py` is used as the Vercel FastAPI entrypoint.
+- `backend/main.py` remains the local Uvicorn entrypoint.
+- SQLite history is ephemeral on serverless hosting and may reset across cold starts or redeploys.
+- Model artifacts are committed so inference works without retraining during deployment.
 
 ## API Surface
 
@@ -171,18 +176,18 @@ Representative backend routes:
 - `GET /api/history/`
 - `GET /api/usgs-proxy/`
 
-## Model Pipeline
+## Model Notes
 
-The ML layer is designed as a risk estimation system rather than an authoritative forecasting engine.
+The ML pipeline is positioned as a risk estimation system for decision support, not as an authoritative real-world forecasting engine.
 
-The current pipeline:
+The current shipped model:
 
-- trains on city, seasonal, geospatial, and demographic features
+- uses seasonal, geospatial, demographic, and event-severity features
 - exposes evaluation metrics and feature importance
-- compares the main model against simple baselines
-- stores model artifacts for API inference
+- compares the main model against simpler baselines
+- serves inference through the FastAPI backend
 
-To regenerate the training artifacts:
+To regenerate training artifacts:
 
 ```bash
 pip install -r backend/requirements-train.txt
@@ -199,9 +204,9 @@ This refreshes:
 
 ## Notes
 
-- Historical starter data is seeded through `backend/seed.py`.
-- The seed process is idempotent and avoids duplicate inserts on repeated deploys.
-- The backend uses a USGS proxy so the frontend does not depend on direct browser-side third-party requests.
+- Seed data is initialized through `backend/seed.py`.
+- The seed flow is idempotent and avoids duplicate inserts on repeated deploys.
+- The backend uses a USGS proxy so the frontend does not rely on direct third-party browser requests.
 
 ## License
 
