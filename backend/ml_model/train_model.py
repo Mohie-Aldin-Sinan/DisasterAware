@@ -19,7 +19,6 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold, cross_validate, train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder, OrdinalEncoder, StandardScaler
-from xgboost import XGBClassifier
 
 try:
     import shap
@@ -192,10 +191,8 @@ def train_model():
 
     gb = GradientBoostingClassifier(n_estimators=100, learning_rate=0.05, random_state=42)
     rf = RandomForestClassifier(n_estimators=100, class_weight="balanced", random_state=42)
-    xgb = XGBClassifier(n_estimators=100, random_state=42, eval_metric="mlogloss")
-
     voting_clf = VotingClassifier(
-        estimators=[("gb", gb), ("rf", rf), ("xgb", xgb)],
+        estimators=[("gb", gb), ("rf", rf)],
         voting="soft",
     )
 
@@ -214,7 +211,6 @@ def train_model():
     param_distributions = {
         "classifier__gb__n_estimators": [100, 200],
         "classifier__rf__n_estimators": [100, 200],
-        "classifier__xgb__n_estimators": [100, 200],
     }
 
     cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
@@ -278,7 +274,7 @@ def train_model():
         "training_samples": int(len(X_train)),
         "test_samples": ensemble_metrics["test_samples"],
         "trained_at": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "model_type": "VotingClassifier (GradientBoosting + RandomForest + XGBoost)",
+        "model_type": "VotingClassifier (GradientBoosting + RandomForest)",
         "data_sources": [
             "EM-DAT India 2000-2024",
             "USGS Earthquake Catalog",

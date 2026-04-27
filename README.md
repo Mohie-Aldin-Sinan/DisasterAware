@@ -62,7 +62,6 @@ graph TD
 - Pandas
 - NumPy
 - Scikit-learn
-- XGBoost
 - SHAP for offline model analysis
 
 ## Repository Structure
